@@ -1,82 +1,69 @@
-// Assignment Code
+
 const generateBtn = document.querySelector("#generate");
 
-// Object containing values to be entered in final password
-const passwordItems = {
-  lettersLower: "abcdefghijklmnopqrstuvwxyz",
-  lettersUpper: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-  numbers: "1234567890",
-  characters: "!@#$%^&*",
-}
+const lowercase = "abcdefghijklmnopqrstuvwxyz";
+const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const numeric = "1234567890";
+const spChar = "!@#$%^&*";
+let superCharacters = "";
 
-// establishes user inputs
-let length;
-let uppercase;
-let lowercase;
-let numeric;
-let spChar;
-
-// Write password to the #password input
 function writePassword() {
   const password = generatePassword();
   const passwordText = document.querySelector("#password");
 
   passwordText.value = password;
-
 }
-length = Number(prompt("How long would you like your password to be?", "8 to 128 characters"));
 
 function enterLength() {
+  const length = Number(prompt("How long would you like your password to be?", "8 to 128 characters"));
   if (length > 8 && length < 128) {
-    uppercase = confirm("Do you want uppercase letters in you password?");
+    return length;
   } else {
     alert("Please select a number between 8 and 128.");
-    Number(prompt("How long would you like your password to be?", "8 to 128 characters"));
-    // enterLength();
+    return enterLength();
   }
 }
 
-enterLength();
+function generatePassword() {
+  const length = enterLength();
+  let password = "";
+  const needLowercase = confirm("Do you want lowercase letters in you password?");
+  const needUppercase = confirm("Do you want uppercase letters in your password?");
+  const needNumeric = confirm("Do you want numbers in your password?");
+  const needSpChar = confirm("Do you want special characters in your password?");
+  let varCounter = 0;
 
-function enterUpperCase() {
-  if (uppercase === true) {
-    // code that includes uppercase
-    lowercase = confirm("Do you want lowercase letters in you password?");
-  } else {
-    lowercase = confirm("Do you want lowercase letters in you password?");
+  if (needLowercase) {
+    superCharacters = lowercase;
+    const randIndex = Math.floor(Math.random() * lowercase.length);
+    password = password + lowercase[randIndex];
+    varCounter++;
   }
+  if (needUppercase) {
+    superCharacters = superCharacters + uppercase;
+    const randIndex = Math.floor(Math.random() * uppercase.length);
+    password = password + uppercase[randIndex];
+    varCounter++;
+  }
+  if (needNumeric) {
+    superCharacters = superCharacters + numeric;
+    const randIndex = Math.floor(Math.random() * numeric.length);
+    password = password + numeric[randIndex];
+    varCounter++;
+  }
+  if (needSpChar) {
+    superCharacters = superCharacters + spChar;
+    const randIndex = Math.floor(Math.random() * spChar.length);
+    password = password + spChar[randIndex];
+    varCounter++;
+  }
+
+  for (let i = 0; i < length - varCounter; i++) {
+    const randIndex = Math.floor(Math.random() * superCharacters.length);
+    password += superCharacters[randIndex];
+  }
+  password = password.split("").sort(function () { return 0.5 - Math.random() }).join("");
+  return password;
 }
 
-enterUpperCase();
-
-function enterLowerCase() {
-  if (lowercase === true) {
-    // code that includes lowercase
-    numeric = confirm("Do you want numbers in you password?");
-  } else {
-    numeric = confirm("Do you want numbers in you password?");
-  }
-}
-
-enterLowerCase();
-
-function enterNumeric() {
-  if (numeric === true) {
-    // code that includes numeric
-    spChar = confirm("Do you want special characters in you password?");
-  } else {
-    spChar = confirm("Do you want special characters in you password?");
-  }
-}
-
-enterNumeric();
-
-function enterSpChar() {
-  if (spChar === true) {
-    // code that generates password
-  }
-}
-// Add event listener to generate button
-
-enterSpChar();
 generateBtn.addEventListener("click", writePassword);
